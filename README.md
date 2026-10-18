@@ -4,7 +4,7 @@
 
 A self-paced, build-first roadmap for learning Computer Science—from programming fundamentals and computer systems to modern AI engineering and specialisation.
 
-[🌐 **Live Website**](https://suryanshpal808-rgb.github.io/CS-Framework/) · [💻 **GitHub Repository**](https://github.com/suryanshpal808-rgb/CS-Framework)
+[🌐 **Live Website**](https://suryanshpal-09.github.io/CS-Framework/) · [💻 **GitHub Repository**](https://github.com/suryanshpal-09/CS-Framework)
 
 **36 subjects · A four-year CS syllabus · Interactive roadmap · Study planning · Tools and projects**
 
