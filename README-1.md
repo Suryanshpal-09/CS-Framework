@@ -43,6 +43,10 @@ are `--gap`, `--partial` and `--covered`.
 **Add a theme.** Add a block like `:root[data-theme="mytheme"] { ... }` to `css/styles.css`
 (copy the Ocean block), then add an entry to `THEMES` in `js/app.js`.
 
+**Change the top-left links.** The two "Beyond Sigma" buttons are in `index.html` (search for
+`source-links`). Change the `href` to point somewhere else. Their logos are each site's favicon,
+loaded through Google's favicon service; if a logo fails to load, a plain arrow is shown instead.
+
 ## Your progress
 
 Ticks and the chosen theme are saved in the browser (`localStorage`), per device and browser.

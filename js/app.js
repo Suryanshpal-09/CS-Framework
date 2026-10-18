@@ -492,6 +492,13 @@ function bindEvents() {
   qs("#depth-input").addEventListener("input", onSettingsChanged);
   qsa(".theme-button").forEach((button) => button.addEventListener("click", cycleTheme));
 
+  // If a source-link logo cannot load (offline, blocked), show a plain arrow instead.
+  qsa(".source-link img").forEach((img) => {
+    const markBroken = () => img.closest(".source-link").classList.add("is-broken");
+    img.addEventListener("error", markBroken);
+    if (img.complete && img.naturalWidth === 0) markBroken(); // already failed before this ran
+  });
+
   // Show the nav's theme button only after the nav sticks to the top of the screen.
   new IntersectionObserver(([entry]) => {
     const scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
