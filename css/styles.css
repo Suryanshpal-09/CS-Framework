@@ -1,0 +1,1073 @@
+/* ==========================================================================
+   styles.css - The Complete CS Degree Roadmap
+
+   Contents
+     1. Design tokens and themes (light, dark, ocean)
+     2. Base: reset, page, typography, buttons, inputs
+     3. Page header: title, call-to-action, legend, progress, filters
+     4. Theme button and source links
+     5. Sticky navigation
+     6. Page sections: study order, tools, projects
+     7. Roadmap tree: phase hubs and the two tracks
+     8. Subject card (the main building block)
+     9. "My plan" view
+    10. Footer, focus and motion
+    11. Responsive rules
+
+   Tip: colours and sizes are variables in section 1. Change them there.
+   ========================================================================== */
+
+/* 1. DESIGN TOKENS AND THEMES ------------------------------------------- */
+
+/* Light theme (default). Every colour in the site comes from these variables. */
+:root {
+  --bg: #fafaf7;
+  --fg: #1c1b19;
+  --muted: #5f5c55;
+  --card: #ffffff;
+  --border: #e3e0d8;
+  --line: #c9c5b8; /* tree spine and dividers */
+
+  /* Coverage status colours. gap = not in Beyond Sigma, covered = fully in it. */
+  --gap: #e4572e;
+  --partial: #3b82f6;
+  --covered: #16a34a;
+  --accent: var(--partial); /* links and focus rings */
+
+  --hub-bg: #fde68a; /* phase labels on the tree */
+  --hub-fg: #3b2f00;
+
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Dark theme, applied automatically when the device prefers dark... */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413;
+    --fg: #f1efe8;
+    --muted: #a8a496;
+    --card: #1f1e1c;
+    --border: #33312d;
+    --line: #48453f;
+    --gap: #ff7a59;
+    --partial: #6ea8ff;
+    --covered: #4ade80;
+    --hub-bg: #4a3b05;
+    --hub-fg: #fde68a;
+    color-scheme: dark;
+  }
+}
+
+/* ...and when the user picks it with the theme button.
+   (Same values as above; CSS cannot share them between a media query and a selector.) */
+:root[data-theme="dark"] {
+  --bg: #141413;
+  --fg: #f1efe8;
+  --muted: #a8a496;
+  --card: #1f1e1c;
+  --border: #33312d;
+  --line: #48453f;
+  --gap: #ff7a59;
+  --partial: #6ea8ff;
+  --covered: #4ade80;
+  --hub-bg: #4a3b05;
+  --hub-fg: #fde68a;
+  color-scheme: dark;
+}
+
+/* Ocean theme: deep navy for long evening sessions. Must stay after the dark rules. */
+:root[data-theme="ocean"] {
+  --bg: #0a1424;
+  --fg: #e4edf8;
+  --muted: #8fa3c0;
+  --card: #101e36;
+  --border: #1f3253;
+  --line: #30486f;
+  --gap: #ff8f70;
+  --partial: #5db4ff;
+  --covered: #3fd9a0;
+  --hub-bg: #123a66;
+  --hub-fg: #c6e3ff;
+  color-scheme: dark;
+}
+
+/* 2. BASE ---------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding: 0 14px 40px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Paints the phone's status-bar area so the sticky nav never shows content behind it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 30;
+}
+
+h1,
+h2,
+.phase-hub {
+  font-family: var(--font-heading);
+}
+
+button {
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  accent-color: var(--covered);
+  cursor: pointer;
+}
+
+.number-input {
+  width: 64px;
+  font: inherit;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--fg);
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* 3. PAGE HEADER --------------------------------------------------------- */
+
+header {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 58px 0 12px; /* top space leaves room for the theme button */
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 6vw, 50px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+header > p {
+  max-width: 600px;
+  margin: 0 auto 12px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 18px 0 6px;
+}
+
+.cta {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid var(--fg);
+  border-radius: 10px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cta--secondary {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--fg);
+}
+
+.faq-note {
+  max-width: 700px;
+  margin: 12px auto;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 14px;
+  text-align: left;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  justify-content: center;
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.legend__dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+.legend__dot--gap {
+  background: var(--gap);
+}
+.legend__dot--partial {
+  background: var(--partial);
+}
+.legend__dot--covered {
+  background: var(--covered);
+}
+
+.progress-bar {
+  max-width: 420px;
+  height: 8px;
+  margin: 8px auto 4px;
+  border-radius: 8px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  width: 0;
+  height: 100%;
+  background: var(--covered);
+  transition: width 0.3s;
+}
+
+.progress-text {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Filter buttons, drawn as one segmented control. */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  width: max-content;
+  max-width: 100%;
+  margin: 16px auto 8px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.filters button {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.filters button.is-active {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* "My plan" is the main view, so it gets the accent colour. */
+.filters button[data-filter="plan"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.filters button[data-filter="plan"].is-active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* 4. THEME BUTTON -------------------------------------------------------- */
+/* One button cycles Light > Dark > Ocean. It appears twice: top-right of the page,
+   and inside the sticky nav once the nav sticks (see section 5). */
+
+.theme-button,
+.source-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px 0 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.theme-button:hover,
+.source-link:hover {
+  border-color: var(--line);
+}
+
+.theme-button svg {
+  flex: none;
+}
+
+/* Top-left links to the original Beyond Sigma roadmap (Notion page and NYC site). */
+.source-links {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+}
+
+.source-link {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.source-link:visited {
+  color: var(--fg);
+}
+
+.source-link:hover {
+  border-color: var(--accent);
+}
+
+/* Logo tile. The white background keeps dark logos visible in dark themes. */
+.source-link__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.source-link__icon img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+/* If a logo cannot load (offline, blocked), app.js adds .is-broken and a plain arrow shows. */
+.source-link.is-broken img {
+  display: none;
+}
+
+.source-link.is-broken .source-link__icon::before {
+  content: "↗";
+  color: #111827;
+  font-size: 13px;
+}
+
+.theme-button--top {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 5;
+}
+
+/* Three small dots show which of the three themes is active. */
+.theme-dots {
+  display: flex;
+  gap: 3px;
+  margin-left: 2px;
+}
+
+.theme-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.theme-dots i.is-current {
+  background: var(--accent);
+}
+
+/* 5. STICKY NAVIGATION --------------------------------------------------- */
+
+/* Invisible 1px marker. When it scrolls off the top, JS adds .is-stuck to the nav. */
+.nav-sentinel {
+  height: 1px;
+}
+
+.site-nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin: 0 -14px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.site-nav a {
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  background: var(--card);
+  color: var(--fg);
+}
+
+/* Hidden until the nav is stuck, so there are never two theme buttons on screen. */
+.site-nav .theme-button {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+
+.site-nav.is-stuck .theme-button {
+  display: flex;
+}
+
+/* 6. PAGE SECTIONS: STUDY ORDER, TOOLS, PROJECTS ------------------------- */
+
+.page-section {
+  max-width: 980px;
+  margin: 44px auto 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: 56px;
+}
+
+.page-section h2 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.page-section p {
+  max-width: 640px;
+}
+
+#study-order p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+
+/* Responsive grid used by the study order, tools and projects. */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card-grid .callout {
+  grid-column: 1 / -1;
+}
+
+/* One phase in the study order (also reused for tools and projects). */
+.phase-card {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.phase-card__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+}
+
+.phase-card__subtitle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.phase-card__time {
+  display: block;
+  margin: 2px 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.phase-card ol,
+.phase-card ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+
+.phase-card li {
+  margin: 5px 0;
+}
+
+.phase-card li a {
+  color: var(--fg);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.phase-card li a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.phase-card__hours {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+/* Tools: small tags. */
+.tool-card ul,
+.project-card ul {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-card li {
+  display: inline-block;
+  margin: 0 6px 6px 0;
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 13px;
+}
+
+/* Projects: simple list with a square bullet. */
+.project-card li {
+  position: relative;
+  margin: 6px 0;
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+.project-card li::before {
+  content: "";
+  position: absolute;
+  top: 0.6em;
+  left: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* 7. ROADMAP TREE: PHASE HUBS AND TWO TRACKS ----------------------------- */
+
+#roadmap {
+  scroll-margin-top: 64px;
+}
+
+/* The label that marks each year / phase. */
+.phase-hub {
+  width: max-content;
+  max-width: 100%;
+  margin: 40px auto 16px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  background: var(--hub-bg);
+  color: var(--hub-fg);
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.phase-hub small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* Two tracks with a spine between them: theory (left) | spine | systems (right). */
+.tracks {
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  gap: 0 22px;
+}
+
+.tracks > * {
+  min-width: 0; /* lets long text wrap instead of stretching the grid */
+}
+
+.track--theory {
+  grid-column: 1;
+  grid-row: 1;
+}
+.tracks__spine {
+  grid-column: 2;
+  grid-row: 1;
+  background: var(--line);
+}
+.track--systems {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.track-label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.track--theory .track-label {
+  text-align: right;
+}
+
+/* Short connector lines from each card to the spine (wide screens only). */
+@media (min-width: 901px) {
+  .track--theory .subject::after,
+  .track--systems .subject::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    width: 22px;
+    border-top: 2px solid var(--line);
+  }
+  .track--theory .subject::after {
+    right: -24px;
+  }
+  .track--systems .subject::after {
+    left: -26px;
+  }
+}
+
+/* 8. SUBJECT CARD -------------------------------------------------------- */
+/* Structure:  .subject > .subject-head (checkbox, title, status label)
+                        > .plan-info    (only in My plan)
+                        > .subject-body (hidden until the card is open)       */
+
+.subject {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 12px 40px 12px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--status);
+  border-radius: 10px;
+  background: var(--card);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition: border-color 0.15s;
+}
+
+.subject:hover {
+  border-color: var(--line) var(--line) var(--line) var(--status);
+}
+
+/* Coverage status sets the card's accent colour. */
+.coverage-0 {
+  --status: var(--gap);
+}
+.coverage-1 {
+  --status: var(--partial);
+}
+.coverage-2 {
+  --status: var(--covered);
+}
+
+/* Arrow that flips when the card opens. */
+.subject::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  right: 16px;
+  width: 7px;
+  height: 7px;
+  border: solid var(--muted);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+
+.subject.is-open::before {
+  top: 20px;
+  transform: rotate(-135deg);
+}
+
+.subject-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.subject-title {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.subject.is-done .subject-title {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+/* Status label (text, so meaning never depends on colour alone). */
+.subject-head::after {
+  margin-left: auto;
+  padding: 0 8px;
+  border: 1px solid var(--status);
+  border-radius: 999px;
+  color: var(--status);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.coverage-0 .subject-head::after {
+  content: "Not in BS";
+}
+.coverage-1 .subject-head::after {
+  content: "Partly in BS";
+}
+.coverage-2 .subject-head::after {
+  content: "In BS";
+}
+
+.subject-body {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.subject.is-open .subject-body {
+  display: block;
+}
+
+.topic-chip {
+  display: inline-block;
+  margin: 0 5px 5px 0;
+  padding: 1px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.coverage-note {
+  display: block;
+  color: var(--status);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Learning path, resources and checkpoint inside an open card. */
+.detail {
+  margin-top: 10px;
+  color: var(--fg);
+  font-size: 13px;
+  cursor: auto;
+}
+
+.detail__heading {
+  display: block;
+  margin: 16px 0 4px;
+  font-size: 13px;
+}
+
+.detail__heading:first-child {
+  margin-top: 4px;
+}
+
+/* Numbered learning steps. */
+.detail ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.detail ol li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  margin: 6px 0;
+  counter-increment: step;
+}
+
+.detail ol li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Resource links. */
+.detail ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail ul li {
+  margin: 0;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail ul li:last-child {
+  border-bottom: 0;
+}
+
+.detail a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* "Move on when..." checkpoint, also used for the study-plan total. */
+.callout {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--covered);
+  border-radius: 0 8px 8px 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Inside the study order the callout text is muted (it is a summary line). */
+#study-order .callout {
+  color: var(--muted);
+}
+
+/* 9. "MY PLAN" VIEW ------------------------------------------------------- */
+
+/* Week box at the top: "I am in week N" and the "Do now" list. */
+.week-panel {
+  max-width: 760px;
+  margin: 14px auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--covered);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 14px;
+}
+
+.week-panel p {
+  margin: 6px 0;
+}
+
+.do-now {
+  line-height: 2;
+}
+
+.do-now a {
+  display: inline-block;
+  margin: 0 6px 4px 0;
+  padding: 1px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.do-now a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The single column of steps, with a spine and a dot per card. */
+.plan-track {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: 24px;
+  border-left: 3px solid var(--line);
+}
+
+.plan-track > .subject {
+  scroll-margin-top: 72px; /* keeps a jumped-to card below the sticky nav */
+}
+
+.plan-track > .subject::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -33px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--status);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* What it is / Start here / Tools / When. */
+.plan-info {
+  margin: 10px 0 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 13px;
+}
+
+.plan-info p {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.plan-info b {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* 10. FOOTER, FOCUS AND MOTION ------------------------------------------- */
+
+footer {
+  max-width: 700px;
+  margin: 30px auto 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 11. RESPONSIVE --------------------------------------------------------- */
+
+/* Tablets and phones: the two tracks become one column beside a thin spine. */
+@media (max-width: 900px) {
+  .tracks {
+    grid-template-columns: 2px 1fr;
+    gap: 0 14px;
+  }
+  .tracks__spine {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .track--theory {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .track--systems {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .track--theory .track-label {
+    text-align: left;
+  }
+}
+
+/* Phones. */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  .filters button {
+    padding: 7px 10px;
+  }
+
+  /* Nav links stay on one line; room is kept on the right for the theme button. */
+  .site-nav {
+    justify-content: flex-start;
+    padding-right: 56px;
+  }
+  .site-nav a {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  /* Theme button shrinks to its icon. */
+  .theme-button {
+    padding: 0 10px;
+  }
+  .theme-button span:not(.theme-dots) {
+    display: none;
+  }
+  .theme-dots {
+    display: none;
+  }
+
+  .plan-info p {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Very narrow phones: logos only, so the top-left links never touch the theme button. */
+@media (max-width: 380px) {
+  .source-link {
+    padding: 0 6px;
+  }
+  .source-link span:not(.source-link__icon) {
+    display: none;
+  }
+}

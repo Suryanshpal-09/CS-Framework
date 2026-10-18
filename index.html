@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>The Complete CS Degree Roadmap</title>
+    <meta
+      name="description"
+      content="A self-paced computer science degree roadmap: 36 subjects, study order, tools, projects and free resources."
+    />
+    <meta name="theme-color" content="#111827" />
+
+    <!-- Favicon: a small tree (trunk, two branches, three status-coloured nodes), embedded as SVG. -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111827'/%3E%3Cpath d='M32 50V30M32 30L18 15M32 30L46 15' stroke='%23e5e7eb' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='18' cy='14' r='7' fill='%23ff7a59'/%3E%3Ccircle cx='46' cy='14' r='7' fill='%236ea8ff'/%3E%3Ccircle cx='32' cy='51' r='7' fill='%234ade80'/%3E%3C/svg%3E"
+    />
+
+    <!-- Fonts (optional: the site falls back to system fonts if these cannot load). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+
+    <link rel="stylesheet" href="css/styles.css?v=3" />
+  </head>
+
+  <body>
+    <!-- Theme button, top-right. A second copy lives inside the sticky nav. -->
+    <button type="button" class="theme-button theme-button--top"></button>
+
+    <!-- Source links, top-left: where the original "Beyond Sigma" roadmap this site builds on lives.
+         Logos come from each site's own favicon via Google's favicon service. -->
+    <div class="source-links">
+      <a
+        class="source-link"
+        href="https://notyourcollege.notion.site/beyond-sigma"
+        target="_blank"
+        rel="noopener"
+        title="Beyond Sigma syllabus (Notion page)"
+        aria-label="Beyond Sigma syllabus on Notion (opens in a new tab)"
+      >
+        <span class="source-link__icon"
+          ><img
+            src="https://www.google.com/s2/favicons?domain=notion.so&sz=64"
+            alt=""
+            width="20"
+            height="20"
+        /></span>
+        <span>BS - Syllabus</span>
+      </a>
+      <a
+        class="source-link"
+        href="https://notyourcollege.com/beyondSigmaroadmap"
+        target="_blank"
+        rel="noopener"
+        title="Beyond Sigma roadmap on Not Your College (NYC)"
+        aria-label="Beyond Sigma roadmap on Not Your College (opens in a new tab)"
+      >
+        <span class="source-link__icon"
+          ><img
+            src="https://www.google.com/s2/favicons?domain=notyourcollege.com&sz=64"
+            alt=""
+            width="20"
+            height="20"
+        /></span>
+        <span>BS - Roadmap</span>
+      </a>
+    </div>
+
+    <!-- ===== Page header ===== -->
+    <header>
+      <h1>The Complete CS Degree Roadmap</h1>
+      <p>
+        A full 4-year computer science syllabus as a tree: fundamentals first, then two tracks side
+        by side, then specialisation. Tap a card for its topics, tick it when done.
+      </p>
+
+      <div class="cta-row">
+        <a class="cta" href="#plan-0-0" data-jump="plan-0-0"
+          >Start with step 1: Tools and the internet</a
+        >
+        <a class="cta cta--secondary" href="#study-order">See the study order</a>
+      </div>
+
+      <div class="faq-note">
+        <b>Is assembly language in a CS degree?</b> Yes. It lives in
+        <i>Computer Organization and Assembly</i> (Year 2): you write RISC-V, ARM or x86 assembly,
+        learn how the CPU executes it, then use it again in OS, compilers and security.
+      </div>
+
+      <!-- What the card colours mean. BS = Beyond Sigma, the course the original roadmap came from. -->
+      <div class="legend">
+        <span><i class="legend__dot legend__dot--gap"></i>Not in Beyond Sigma (BS)</span>
+        <span><i class="legend__dot legend__dot--partial"></i>Partly covered</span>
+        <span><i class="legend__dot legend__dot--covered"></i>Already covered</span>
+      </div>
+
+      <div class="progress-bar"><div class="progress-bar__fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text"></div>
+
+      <!-- Filter buttons are created by app.js (renderFilters). -->
+      <div class="filters" id="filters"></div>
+    </header>
+
+    <!-- A 1px marker: when it scrolls away, the nav below is "stuck" to the top. -->
+    <div class="nav-sentinel" id="nav-sentinel"></div>
+    <nav class="site-nav" id="site-nav" aria-label="Page sections">
+      <a href="#study-order">Study order</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#tools">Tools</a>
+      <a href="#projects">Projects</a>
+      <button type="button" class="theme-button"></button>
+    </nav>
+
+    <!-- ===== Study order and time ===== -->
+    <section class="page-section" id="study-order">
+      <h2>Start here: study order and time</h2>
+      <p>
+        Built for making things first: building and AI come early, logic and theory run lightly
+        alongside. Hours are lean estimates for focused study with exercises, and interview prep is
+        left out on purpose.
+      </p>
+      <label>
+        Your hours per week
+        <input class="number-input" id="hours-input" type="number" min="3" max="80" value="48" />
+      </label>
+      &nbsp;
+      <label>
+        Depth (1 = lean, 1.5 = thorough)
+        <input
+          class="number-input"
+          id="depth-input"
+          type="number"
+          min="1"
+          max="3"
+          step="0.1"
+          value="1.5"
+        />
+      </label>
+      <p>
+        At 48 h a week, a daily rhythm that works: 4.5 h on the current build or systems phase, 1.5
+        h on the always-on logic and math track, 1.5 h on the phase project, 0.5 h on Anki review.
+        Keep one lighter day a week so the learning sticks.
+      </p>
+      <div class="card-grid" id="phase-list"></div>
+    </section>
+
+    <!-- ===== Roadmap tree (filled by app.js: year tree or "My plan" view) ===== -->
+    <main id="roadmap"></main>
+
+    <!-- ===== Tools ===== -->
+    <section class="page-section" id="tools">
+      <h2>Every tool you will use</h2>
+      <p>Grouped by the phase where you pick each one up. Install it only when its phase starts.</p>
+      <div class="card-grid" id="tool-list"></div>
+    </section>
+
+    <!-- ===== Projects ===== -->
+    <section class="page-section" id="projects">
+      <h2>Projects you will build</h2>
+      <p>
+        Every phase ends with things you make. Each project should live in its own GitHub repo with
+        a README.
+      </p>
+      <div class="card-grid" id="project-list"></div>
+    </section>
+
+    <footer>All 36 subjects have resources. Found a dead link? Fix it in js/data.js.</footer>
+
+    <!-- Content first, then behaviour. -->
+    <script src="js/data.js?v=3"></script>
+    <script src="js/app.js?v=3"></script>
+  </body>
+</html>
