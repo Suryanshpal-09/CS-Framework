@@ -325,6 +325,8 @@ header > p {
 
 .theme-button,
 .source-link {
+.theme-button,
+.source-link {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -335,6 +337,8 @@ header > p {
   font-weight: 500;
 }
 
+.theme-button:hover,
+.source-link:hover {
 .theme-button:hover,
 .source-link:hover {
   border-color: var(--line);
@@ -355,9 +359,20 @@ header > p {
 }
 
 .source-link {
+  border: 1px solid var(--border);
+  background: var(--card);
   color: var(--fg);
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.source-link:visited {
+  color: var(--fg);
+}
+
+.source-link:hover {
+  border-color: var(--accent);
 }
 
 /* Logo tile. The white background keeps dark logos visible in dark themes. */
@@ -1054,5 +1069,15 @@ input:focus-visible {
   .plan-info p {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+}
+
+/* Very narrow phones: logos only, so the top-left links never touch the theme button. */
+@media (max-width: 380px) {
+  .source-link {
+    padding: 0 6px;
+  }
+  .source-link span:not(.source-link__icon) {
+    display: none;
   }
 }

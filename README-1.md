@@ -10,12 +10,12 @@ turn on Pages for the main branch (root folder).
 
 ## Files
 
-| File            | What it holds                                                                  |
-| --------------- | ------------------------------------------------------------------------------ |
-| `index.html`    | Page structure only. Sections are filled in by `app.js`.                       |
-| `css/styles.css`| All styling. Colours and fonts are variables in section 1 (themes).            |
-| `js/data.js`    | All content: subjects, resources, study plan, tools, projects.                 |
-| `js/app.js`     | Behaviour: rendering, filters, "My plan", schedule, ticking, theme button.     |
+| File             | What it holds                                                              |
+| ---------------- | -------------------------------------------------------------------------- |
+| `index.html`     | Page structure only. Sections are filled in by `app.js`.                   |
+| `css/styles.css` | All styling. Colours and fonts are variables in section 1 (themes).        |
+| `js/data.js`     | All content: subjects, resources, study plan, tools, projects.             |
+| `js/app.js`      | Behaviour: rendering, filters, "My plan", schedule, ticking, theme button. |
 
 ## Common edits
 
@@ -42,10 +42,6 @@ are `--gap`, `--partial` and `--covered`.
 
 **Add a theme.** Add a block like `:root[data-theme="mytheme"] { ... }` to `css/styles.css`
 (copy the Ocean block), then add an entry to `THEMES` in `js/app.js`.
-
-**Change the top-left links.** The two "Beyond Sigma" buttons are in `index.html` (search for
-`source-links`). Change the `href` to point somewhere else. Their logos are each site's favicon,
-loaded through Google's favicon service; if a logo fails to load, a plain arrow is shown instead.
 
 ## Your progress
 
