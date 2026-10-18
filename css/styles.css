@@ -325,8 +325,6 @@ header > p {
 
 .theme-button,
 .source-link {
-.theme-button,
-.source-link {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -337,8 +335,6 @@ header > p {
   font-weight: 500;
 }
 
-.theme-button:hover,
-.source-link:hover {
 .theme-button:hover,
 .source-link:hover {
   border-color: var(--line);
@@ -1054,12 +1050,6 @@ input:focus-visible {
     padding: 0 10px;
   }
   .theme-button span:not(.theme-dots) {
-    display: none;
-  }
-  .source-link {
-    padding: 0 6px;
-  }
-  .source-link span:not(.source-link__icon) {
     display: none;
   }
   .theme-dots {
