@@ -5,14 +5,13 @@
      1. Design tokens and themes (light, dark, ocean)
      2. Base: reset, page, typography, buttons, inputs
      3. Page header: title, call-to-action, legend, progress, filters
-     4. Theme button and source links
-     5. Sticky navigation
-     6. Page sections: study order, tools, projects
-     7. Roadmap tree: phase hubs and the two tracks
-     8. Subject card (the main building block)
-     9. "My plan" view
-    10. Footer, focus and motion
-    11. Responsive rules
+     4. Site nav: logo, page links, Beyond Sigma links, theme button, mobile menu
+     5. Page sections: study order, tools, projects
+     6. Roadmap tree: phase hubs and the two tracks
+     7. Subject card (the main building block)
+     8. "Best plan" view
+     9. Footer, focus and motion
+    10. Responsive rules
 
    Tip: colours and sizes are variables in section 1. Change them there.
    ========================================================================== */
@@ -175,7 +174,7 @@ main {
 header {
   max-width: 980px;
   margin: 0 auto;
-  padding: 58px 0 12px; /* top space leaves room for the theme button */
+  padding: 32px 0 12px;
   text-align: center;
 }
 
@@ -219,16 +218,26 @@ header > p {
   color: var(--fg);
 }
 
-.faq-note {
-  max-width: 700px;
-  margin: 12px auto;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 10px;
-  background: var(--card);
-  font-size: 14px;
-  text-align: left;
+/* Three at-a-glance numbers under the buttons (filled by app.js). */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 36px;
+  justify-content: center;
+  margin: 22px 0 8px;
+}
+
+.stat strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .legend {
@@ -308,7 +317,7 @@ header > p {
   color: var(--bg);
 }
 
-/* "My plan" is the main view, so it gets the accent colour. */
+/* "Best plan" is the main view, so it gets the accent colour. */
 .filters button[data-filter="plan"] {
   color: var(--accent);
   font-weight: 600;
@@ -319,10 +328,106 @@ header > p {
   color: #ffffff;
 }
 
-/* 4. THEME BUTTON -------------------------------------------------------- */
-/* One button cycles Light > Dark > Ocean. It appears twice: top-right of the page,
-   and inside the sticky nav once the nav sticks (see section 5). */
+/* 4. SITE NAV ----------------------------------------------------------- */
+/* One sticky bar:  [logo]  [page links] ............ [BS buttons] [theme button]
+   Phone layout (menu button, dropdown) is in section 10. */
 
+.site-nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  margin: 0 -14px; /* stretches the bar across the page, past the body padding */
+  border-bottom: 1px solid var(--border);
+  border-bottom-color: color-mix(in srgb, var(--fg) 9%, transparent);
+  transition: box-shadow 0.2s;
+}
+
+/* The frosted-glass layer: a translucent tint plus a blur of whatever scrolls underneath.
+   It is a separate layer (not the nav itself) so the mobile dropdown can use glass too. */
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg); /* fallback for browsers without color-mix */
+  background: color-mix(in srgb, var(--bg) 68%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Browsers that cannot blur get a solid bar, so text never sits on busy content. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-nav::before {
+    background: var(--bg);
+  }
+}
+
+/* A soft shadow appears once the page has scrolled (app.js adds .is-scrolled). */
+.site-nav.is-scrolled {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.site-nav__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 14px;
+}
+
+/* Logo (a link back to the top). The image file changes with the theme. */
+.brand {
+  display: flex;
+  flex: none;
+}
+
+.brand__logo {
+  display: block;
+  width: auto;
+  height: 46px;
+}
+
+.site-nav__menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-nav__links {
+  display: flex;
+  gap: 4px;
+}
+
+.site-nav__links a {
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-nav__links a.is-current {
+  background: var(--card);
+  color: var(--fg);
+}
+
+.site-nav__links a:hover {
+  background: var(--card);
+  color: var(--fg);
+}
+
+/* Right side: the two Beyond Sigma links and the theme button. */
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Pill buttons. The theme button and the Beyond Sigma links share this look. */
 .theme-button,
 .source-link {
   display: flex;
@@ -344,16 +449,25 @@ header > p {
   flex: none;
 }
 
-/* Top-left links to the original Beyond Sigma roadmap (Notion page and NYC site). */
-.source-links {
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  z-index: 5;
+/* Three small dots show which of the three themes is active. */
+.theme-dots {
   display: flex;
-  gap: 8px;
+  gap: 3px;
+  margin-left: 2px;
 }
 
+.theme-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.theme-dots i.is-current {
+  background: var(--accent);
+}
+
+/* Beyond Sigma links. They are <a> tags, so they need their own box. */
 .source-link {
   border: 1px solid var(--border);
   background: var(--card);
@@ -400,86 +514,49 @@ header > p {
   font-size: 13px;
 }
 
-.theme-button--top {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  z-index: 5;
-}
-
-/* Three small dots show which of the three themes is active. */
-.theme-dots {
-  display: flex;
-  gap: 3px;
-  margin-left: 2px;
-}
-
-.theme-dots i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--line);
-}
-
-.theme-dots i.is-current {
-  background: var(--accent);
-}
-
-/* 5. STICKY NAVIGATION --------------------------------------------------- */
-
-/* Invisible 1px marker. When it scrolls off the top, JS adds .is-stuck to the nav. */
-.nav-sentinel {
-  height: 1px;
-}
-
-.site-nav {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  z-index: 20;
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  margin: 0 -14px;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-}
-
-.site-nav a {
-  padding: 6px 14px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.site-nav a:hover {
-  background: var(--card);
-  color: var(--fg);
-}
-
-/* Hidden until the nav is stuck, so there are never two theme buttons on screen. */
-.site-nav .theme-button {
+/* Menu button (hamburger). Only shown on phones; it turns into an X when open. */
+.menu-button {
   display: none;
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  padding: 0;
+  border-radius: 10px;
 }
 
-.site-nav.is-stuck .theme-button {
-  display: flex;
+.menu-button span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--fg);
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
 }
 
-/* 6. PAGE SECTIONS: STUDY ORDER, TOOLS, PROJECTS ------------------------- */
+.site-nav.is-open .menu-button span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.site-nav.is-open .menu-button span:nth-child(2) {
+  opacity: 0;
+}
+.site-nav.is-open .menu-button span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* 5. PAGE SECTIONS: STUDY ORDER, TOOLS, PROJECTS ------------------------- */
 
 .page-section {
   max-width: 980px;
   margin: 44px auto 0;
   padding-top: 32px;
   border-top: 1px solid var(--border);
-  scroll-margin-top: 56px;
+  scroll-margin-top: 72px;
 }
 
 .page-section h2 {
@@ -604,10 +681,10 @@ header > p {
   background: var(--accent);
 }
 
-/* 7. ROADMAP TREE: PHASE HUBS AND TWO TRACKS ----------------------------- */
+/* 6. ROADMAP TREE: PHASE HUBS AND TWO TRACKS ----------------------------- */
 
 #roadmap {
-  scroll-margin-top: 64px;
+  scroll-margin-top: 72px;
 }
 
 /* The label that marks each year / phase. */
@@ -686,9 +763,9 @@ header > p {
   }
 }
 
-/* 8. SUBJECT CARD -------------------------------------------------------- */
+/* 7. SUBJECT CARD -------------------------------------------------------- */
 /* Structure:  .subject > .subject-head (checkbox, title, status label)
-                        > .plan-info    (only in My plan)
+                        > .plan-info    (only in Best plan)
                         > .subject-body (hidden until the card is open)       */
 
 .subject {
@@ -891,7 +968,7 @@ header > p {
   color: var(--muted);
 }
 
-/* 9. "MY PLAN" VIEW ------------------------------------------------------- */
+/* 8. "MY PLAN" VIEW ------------------------------------------------------- */
 
 /* Week box at the top: "I am in week N" and the "Do now" list. */
 .week-panel {
@@ -940,7 +1017,7 @@ header > p {
 }
 
 .plan-track > .subject {
-  scroll-margin-top: 72px; /* keeps a jumped-to card below the sticky nav */
+  scroll-margin-top: 80px; /* keeps a jumped-to card below the sticky nav */
 }
 
 .plan-track > .subject::after {
@@ -976,7 +1053,7 @@ header > p {
   font-weight: 600;
 }
 
-/* 10. FOOTER, FOCUS AND MOTION ------------------------------------------- */
+/* 9. FOOTER, FOCUS AND MOTION ------------------------------------------- */
 
 footer {
   max-width: 700px;
@@ -993,6 +1070,29 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+/* Buttons dip slightly when pressed. */
+.cta,
+.theme-button,
+.source-link,
+.filters button,
+.menu-button {
+  transition:
+    transform 0.12s,
+    border-color 0.15s;
+}
+
+.cta:active,
+.theme-button:active,
+.source-link:active,
+.filters button:active,
+.menu-button:active {
+  transform: scale(0.97);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
@@ -1000,7 +1100,7 @@ input:focus-visible {
   }
 }
 
-/* 11. RESPONSIVE --------------------------------------------------------- */
+/* 10. RESPONSIVE --------------------------------------------------------- */
 
 /* Tablets and phones: the two tracks become one column beside a thin spine. */
 @media (max-width: 900px) {
@@ -1025,6 +1125,69 @@ input:focus-visible {
   }
 }
 
+/* Tablets and phones: nav links and buttons fold into a dropdown opened by the menu button. */
+@media (max-width: 900px) {
+  .menu-button {
+    display: flex;
+  }
+
+  .site-nav__menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 14px 16px;
+    border-bottom: 1px solid var(--border);
+    border-bottom-color: color-mix(in srgb, var(--fg) 9%, transparent);
+    box-shadow: 0 16px 32px rgb(0 0 0 / 0.14);
+    isolation: isolate;
+  }
+
+  .site-nav__menu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--bg); /* fallback */
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    backdrop-filter: saturate(180%) blur(24px);
+  }
+
+  .site-nav.is-open .site-nav__menu {
+    display: flex;
+  }
+
+  .site-nav__links {
+    flex-direction: column;
+  }
+
+  .site-nav__links a {
+    padding: 12px;
+    color: var(--fg);
+    font-size: 16px;
+  }
+
+  .site-nav__actions {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+
+  .source-link {
+    flex: 1 1 140px;
+    justify-content: center;
+  }
+
+  .theme-button {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
 /* Phones. */
 @media (max-width: 600px) {
   h1 {
@@ -1035,39 +1198,15 @@ input:focus-visible {
     padding: 7px 10px;
   }
 
-  /* Nav links stay on one line; room is kept on the right for the theme button. */
-  .site-nav {
-    justify-content: flex-start;
-    padding-right: 56px;
+  .stats {
+    gap: 12px 24px;
   }
-  .site-nav a {
-    padding: 6px 8px;
-    font-size: 13px;
-  }
-
-  /* Theme button shrinks to its icon. */
-  .theme-button {
-    padding: 0 10px;
-  }
-  .theme-button span:not(.theme-dots) {
-    display: none;
-  }
-  .theme-dots {
-    display: none;
+  .stat strong {
+    font-size: 24px;
   }
 
   .plan-info p {
     grid-template-columns: 1fr;
     gap: 0;
-  }
-}
-
-/* Very narrow phones: logos only, so the top-left links never touch the theme button. */
-@media (max-width: 380px) {
-  .source-link {
-    padding: 0 6px;
-  }
-  .source-link span:not(.source-link__icon) {
-    display: none;
   }
 }

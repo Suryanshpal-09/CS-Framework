@@ -6,9 +6,11 @@
  *   2. Saved state (which subjects are ticked)
  *   3. Subject card (HTML builders)
  *   4. Study schedule (hours -> weeks)
- *   5. Views: year tree, "My plan", study order, tools and projects
+ *   5. Views: year tree, "Best plan", study order, tools and projects
  *   6. Theme (Light / Dark / Ocean)
- *   7. Events and start-up
+ *   7. Mobile menu
+ *   8. Nav effects (shadow on scroll, current-section highlight)
+ *   9. Events and start-up
  */
 "use strict";
 
@@ -27,7 +29,7 @@ const FILTERS = [
   { id: "gaps", label: "Gaps", coverage: 0 },
   { id: "partial", label: "Partly covered", coverage: 1 },
   { id: "covered", label: "Already covered", coverage: 2 },
-  { id: "plan", label: "My plan" },
+  { id: "plan", label: "Best plan" },
 ];
 
 // Order matters: this is the order the groups appear inside a card.
@@ -42,6 +44,7 @@ const THEMES = [
   {
     id: "light",
     label: "Light",
+    logo: "img/logo-light.png",
     icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
@@ -50,6 +53,7 @@ const THEMES = [
   {
     id: "dark",
     label: "Dark",
+    logo: "img/logo-dark.png",
     icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
     </svg>`,
@@ -57,6 +61,7 @@ const THEMES = [
   {
     id: "ocean",
     label: "Ocean",
+    logo: "img/logo-ocean.png",
     icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M2 9c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3M2 16c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3" />
     </svg>`,
@@ -142,8 +147,8 @@ function renderDetail(subject) {
 
 /**
  * One subject card.
- *   id       optional element id (used by "My plan" so links can jump to the card)
- *   infoHtml optional panel shown above the hidden body (used by "My plan")
+ *   id       optional element id (used by "Best plan" so links can jump to the card)
+ *   infoHtml optional panel shown above the hidden body (used by "Best plan")
  */
 function renderSubjectCard(subject, { id = "", infoHtml = "" } = {}) {
   const isDone = Boolean(state.done[subject.title]);
@@ -216,7 +221,7 @@ function buildSchedule() {
 
 /* 5. VIEWS --------------------------------------------------------------- */
 
-/** Sticky-top buttons: All / Gaps / Partly / Covered / My plan. */
+/** Sticky-top buttons: All / Gaps / Partly / Covered / Best plan. */
 function renderFilters() {
   qs("#filters").innerHTML = FILTERS.map(
     (f) =>
@@ -269,7 +274,7 @@ function renderYearTree() {
   }).join("");
 }
 
-/* ---- "My plan" view ---- */
+/* ---- "Best plan" view ---- */
 
 /** The info panel above a plan card: what it is, where to start, tools, when. */
 function renderPlanInfo(item, schedule, previousItem) {
@@ -370,11 +375,31 @@ function renderStudyOrder() {
     cards +
     `<p class="callout">Total ${totalHours} h of study. Following the daily rhythm above, the whole plan takes about
      ${totalWeeks} weeks (${(totalWeeks / 52).toFixed(1)} years) at ${hoursPerWeek} h a week.
-     Tap any subject to jump to it in My plan.</p>`;
+     Tap any subject to jump to it in Best plan.</p>`;
+}
+
+/** The three numbers under the buttons: subjects, phases, and total weeks at your pace. */
+function renderStats() {
+  const { hoursPerWeek } = readSettings();
+  const totalWeeks = Math.max(...Object.values(buildSchedule()).map((s) => s.endWeek));
+  const phaseCount = STUDY_PLAN.filter((phase) => !phase.runsAlongside).length;
+
+  const stats = [
+    [ALL_SUBJECTS.length, "subjects"],
+    [phaseCount, "phases"],
+    ["~" + totalWeeks, `weeks at ${hoursPerWeek} h a week`],
+  ];
+  qs("#stats").innerHTML = stats
+    .map(
+      ([number, label]) =>
+        `<div class="stat"><strong>${number}</strong><span>${label}</span></div>`,
+    )
+    .join("");
 }
 
 /** Refreshes everything that depends on the hours / depth boxes. */
 function onSettingsChanged() {
+  renderStats();
   renderStudyOrder();
   if (state.filter === "plan") renderPlanView();
 }
@@ -393,7 +418,7 @@ function renderGroupList(containerSelector, groups, cardClass) {
     .join("");
 }
 
-/** Jumps to a card in "My plan" and opens it. Used by every in-page plan link. */
+/** Jumps to a card in "Best plan" and opens it. Used by every in-page plan link. */
 function jumpToPlanCard(id) {
   if (state.filter !== "plan") setFilter("plan");
   const card = document.getElementById(id);
@@ -422,6 +447,8 @@ function renderThemeButtons() {
 
   const dots = THEMES.map((t, i) => `<i${i === index ? ' class="is-current"' : ""}></i>`).join("");
   const title = `Theme: ${current.label}. Click for ${next.label}`;
+
+  qs("#brand-logo").setAttribute("src", current.logo); // each theme has its own logo file
 
   qsa(".theme-button").forEach((button) => {
     button.innerHTML = `${current.icon}<span>${current.label}</span><span class="theme-dots">${dots}</span>`;
@@ -454,7 +481,51 @@ function restoreSavedTheme() {
   }
 }
 
-/* 7. EVENTS AND START-UP ------------------------------------------------- */
+/* 7. MOBILE MENU -------------------------------------------------------- */
+
+/** Opens or closes the dropdown menu (only visible on phones and tablets). */
+function setMenuOpen(open) {
+  const button = qs("#menu-button");
+  qs("#site-nav").classList.toggle("is-open", open);
+  button.setAttribute("aria-expanded", String(open));
+  button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
+
+/* 8. NAV EFFECTS ------------------------------------------------------- */
+
+/** Adds a soft shadow to the nav once the page has scrolled. */
+function watchScroll() {
+  const update = () => qs("#site-nav").classList.toggle("is-scrolled", window.scrollY > 8);
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+}
+
+/** Highlights the nav link of the section you are currently reading. */
+function watchSections() {
+  const links = new Map(
+    [...qsa(".site-nav__links a")].map((a) => [a.getAttribute("href").slice(1), a]),
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries
+        .filter((entry) => entry.isIntersecting)
+        .forEach((entry) => {
+          links.forEach((link) => {
+            link.classList.remove("is-current");
+            link.removeAttribute("aria-current");
+          });
+          const link = links.get(entry.target.id);
+          link.classList.add("is-current");
+          link.setAttribute("aria-current", "true");
+        });
+    },
+    { rootMargin: "-40% 0px -55% 0px" }, // a thin band around the middle of the screen
+  );
+  links.forEach((link, id) => observer.observe(document.getElementById(id)));
+}
+
+/* 9. EVENTS AND START-UP ------------------------------------------------- */
 
 function bindEvents() {
   // Filter buttons: switch view, then bring the tree into view (it sits below the header).
@@ -480,7 +551,7 @@ function bindEvents() {
     }
   });
 
-  // Any link with data-jump goes to that card in "My plan".
+  // Any link with data-jump goes to that card in "Best plan".
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[data-jump]");
     if (!link) return;
@@ -499,11 +570,21 @@ function bindEvents() {
     if (img.complete && img.naturalWidth === 0) markBroken(); // already failed before this ran
   });
 
-  // Show the nav's theme button only after the nav sticks to the top of the screen.
-  new IntersectionObserver(([entry]) => {
-    const scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-    qs("#site-nav").classList.toggle("is-stuck", scrolledPast);
-  }).observe(qs("#nav-sentinel"));
+  // Mobile menu: the button opens it; choosing a link, clicking outside or pressing Escape closes it.
+  qs("#menu-button").addEventListener("click", () => {
+    setMenuOpen(!qs("#site-nav").classList.contains("is-open"));
+  });
+  qs("#site-menu").addEventListener("click", (event) => {
+    if (event.target.closest("a")) setMenuOpen(false);
+  });
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest("#site-nav")) setMenuOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    setMenuOpen(false);
+    qs("#menu-button").focus();
+  });
 }
 
 function init() {
@@ -511,10 +592,13 @@ function init() {
   renderThemeButtons();
   renderFilters();
   renderRoadmap();
+  renderStats();
   renderStudyOrder();
   renderGroupList("#tool-list", TOOLS, "tool-card");
   renderGroupList("#project-list", PROJECTS, "project-card");
   bindEvents();
+  watchScroll();
+  watchSections();
 }
 
 init();

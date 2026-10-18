@@ -24,51 +24,88 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
     />
 
-    <link rel="stylesheet" href="css/styles.css?v=3" />
+    <link rel="stylesheet" href="css/styles.css?v=5" />
   </head>
 
-  <body>
-    <!-- Theme button, top-right. A second copy lives inside the sticky nav. -->
-    <button type="button" class="theme-button theme-button--top"></button>
+  <body id="top">
+    <!-- ===== Site nav =====
+         Wide screens: logo on the left, page links in the middle, Beyond Sigma links + theme button on the right.
+         Phones: only the logo and a menu button show; the links and buttons fold into the menu. -->
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <div class="site-nav__bar">
+        <a class="brand" href="#top" aria-label="Tech Skillo logo, back to top">
+          <!-- The logo file changes with the theme (see THEMES in js/app.js). -->
+          <img
+            class="brand__logo"
+            id="brand-logo"
+            src="img/logo-light.png"
+            alt="Tech Skillo"
+            width="58"
+            height="46"
+          />
+        </a>
 
-    <!-- Source links, top-left: where the original "Beyond Sigma" roadmap this site builds on lives.
-         Logos come from each site's own favicon via Google's favicon service. -->
-    <div class="source-links">
-      <a
-        class="source-link"
-        href="https://notyourcollege.notion.site/beyond-sigma"
-        target="_blank"
-        rel="noopener"
-        title="Beyond Sigma syllabus (Notion page)"
-        aria-label="Beyond Sigma syllabus on Notion (opens in a new tab)"
-      >
-        <span class="source-link__icon"
-          ><img
-            src="https://www.google.com/s2/favicons?domain=notion.so&sz=64"
-            alt=""
-            width="20"
-            height="20"
-        /></span>
-        <span>BS - Syllabus</span>
-      </a>
-      <a
-        class="source-link"
-        href="https://notyourcollege.com/beyondSigmaroadmap"
-        target="_blank"
-        rel="noopener"
-        title="Beyond Sigma roadmap on Not Your College (NYC)"
-        aria-label="Beyond Sigma roadmap on Not Your College (opens in a new tab)"
-      >
-        <span class="source-link__icon"
-          ><img
-            src="https://www.google.com/s2/favicons?domain=notyourcollege.com&sz=64"
-            alt=""
-            width="20"
-            height="20"
-        /></span>
-        <span>BS - Roadmap</span>
-      </a>
-    </div>
+        <button
+          type="button"
+          class="menu-button"
+          id="menu-button"
+          aria-expanded="false"
+          aria-controls="site-menu"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="site-nav__menu" id="site-menu">
+          <div class="site-nav__links">
+            <a href="#study-order">Study order</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#tools">Tools</a>
+            <a href="#projects">Projects</a>
+          </div>
+
+          <div class="site-nav__actions">
+            <!-- Where the original Beyond Sigma roadmap lives. Logos are each site's favicon,
+                 loaded through Google's favicon service. -->
+            <a
+              class="source-link"
+              href="https://notyourcollege.notion.site/beyond-sigma"
+              target="_blank"
+              rel="noopener"
+              title="Beyond Sigma syllabus (Notion page)"
+              aria-label="Beyond Sigma syllabus on Notion (opens in a new tab)"
+            >
+              <span class="source-link__icon"
+                ><img
+                  src="https://www.google.com/s2/favicons?domain=notion.so&sz=64"
+                  alt=""
+                  width="20"
+                  height="20"
+              /></span>
+              <span>BS - Syllabus</span>
+            </a>
+            <a
+              class="source-link"
+              href="https://notyourcollege.com/beyondSigmaroadmap"
+              target="_blank"
+              rel="noopener"
+              title="Beyond Sigma roadmap on Not Your College (NYC)"
+              aria-label="Beyond Sigma roadmap on Not Your College (opens in a new tab)"
+            >
+              <span class="source-link__icon"
+                ><img
+                  src="https://www.google.com/s2/favicons?domain=notyourcollege.com&sz=64"
+                  alt=""
+                  width="20"
+                  height="20"
+              /></span>
+              <span>BS - Roadmap</span>
+            </a>
+            <button type="button" class="theme-button"></button>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- ===== Page header ===== -->
     <header>
@@ -85,11 +122,8 @@
         <a class="cta cta--secondary" href="#study-order">See the study order</a>
       </div>
 
-      <div class="faq-note">
-        <b>Is assembly language in a CS degree?</b> Yes. It lives in
-        <i>Computer Organization and Assembly</i> (Year 2): you write RISC-V, ARM or x86 assembly,
-        learn how the CPU executes it, then use it again in OS, compilers and security.
-      </div>
+      <!-- Subjects, phases and total weeks. Filled by app.js (renderStats). -->
+      <div class="stats" id="stats"></div>
 
       <!-- What the card colours mean. BS = Beyond Sigma, the course the original roadmap came from. -->
       <div class="legend">
@@ -104,16 +138,6 @@
       <!-- Filter buttons are created by app.js (renderFilters). -->
       <div class="filters" id="filters"></div>
     </header>
-
-    <!-- A 1px marker: when it scrolls away, the nav below is "stuck" to the top. -->
-    <div class="nav-sentinel" id="nav-sentinel"></div>
-    <nav class="site-nav" id="site-nav" aria-label="Page sections">
-      <a href="#study-order">Study order</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#tools">Tools</a>
-      <a href="#projects">Projects</a>
-      <button type="button" class="theme-button"></button>
-    </nav>
 
     <!-- ===== Study order and time ===== -->
     <section class="page-section" id="study-order">
@@ -148,7 +172,7 @@
       <div class="card-grid" id="phase-list"></div>
     </section>
 
-    <!-- ===== Roadmap tree (filled by app.js: year tree or "My plan" view) ===== -->
+    <!-- ===== Roadmap tree (filled by app.js: year tree or "Best plan" view) ===== -->
     <main id="roadmap"></main>
 
     <!-- ===== Tools ===== -->
@@ -171,7 +195,7 @@
     <footer>All 36 subjects have resources. Found a dead link? Fix it in js/data.js.</footer>
 
     <!-- Content first, then behaviour. -->
-    <script src="js/data.js?v=3"></script>
-    <script src="js/app.js?v=3"></script>
+    <script src="js/data.js?v=5"></script>
+    <script src="js/app.js?v=5"></script>
   </body>
 </html>
