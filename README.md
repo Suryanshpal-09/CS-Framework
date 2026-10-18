@@ -10,13 +10,17 @@ A self-paced, build-first roadmap for learning Computer Science—from programmi
 
 ---
 
-## 📌 About the project
+## 📌 About CS Framework
 
-**CS Framework** brings a broad, degree-style Computer Science syllabus into one guided roadmap. It combines foundational concepts, systems knowledge, practical software development, and advanced topics so learners can connect what they study with things they build.
+**CS Framework** is an interactive, self-paced roadmap designed to help learners understand Computer Science systematically, from programming fundamentals and mathematics to computer systems, software engineering, cloud technologies, and modern AI.
 
-The roadmap is presented as an interactive tree: start with tools and the internet, work through the foundations, follow related learning tracks side by side, and move toward advanced topics and specialisation. The aim is to make learning more deliberate than jumping between disconnected tutorials.
+Rather than jumping between disconnected tutorials, learners can follow a structured learning path, explore subject topics and learning resources, plan their study time, track their progress, and apply their knowledge through practical projects.
 
-CS Framework is an independent learning resource. It is not a university, an accredited degree, or a certification programme.
+With **36 Computer Science subjects**, curriculum coverage insights, a study planner, and dedicated Tools and Projects sections, CS Framework connects theoretical foundations with practical software development.
+
+The goal is simple: **learn the fundamentals, build real projects, understand how things work, and keep growing as an engineer.**
+
+CS Framework is an independent educational resource intended to support self-learning. It does not award an accredited university degree or professional certification.
 
 ## ✨ What you can do
 
