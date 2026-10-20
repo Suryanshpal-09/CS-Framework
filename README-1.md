@@ -10,13 +10,14 @@ turn on Pages for the main branch (root folder).
 
 ## Files
 
-| File             | What it holds                                                                |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `index.html`     | Page structure only. Sections are filled in by `app.js`.                     |
-| `img/`           | The three theme logos (`logo-light.png`, `logo-dark.png`, `logo-ocean.png`). |
-| `css/styles.css` | All styling. Colours and fonts are variables in section 1 (themes).          |
-| `js/data.js`     | All content: subjects, resources, study plan, tools, projects.               |
-| `js/app.js`      | Behaviour: rendering, filters, "Best plan", schedule, ticking, theme button. |
+| File                                                   | What it holds                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `index.html`                                           | Page structure only. Sections are filled in by `app.js`.                     |
+| `img/`                                                 | The three theme logos (`logo-light.svg`, `logo-dark.svg`, `logo-ocean.svg`). |
+| `favicon.ico`, `favicon-*.png`, `apple-touch-icon.png` | Browser-tab icon pack, next to `index.html`.                                 |
+| `css/styles.css`                                       | All styling. Colours and fonts are variables in section 1 (themes).          |
+| `js/data.js`                                           | All content: subjects, resources, study plan, tools, projects.               |
+| `js/app.js`                                            | Behaviour: rendering, filters, "Best plan", schedule, ticking, theme button. |
 
 ## Common edits
 
@@ -45,8 +46,9 @@ are `--gap`, `--partial` and `--covered`.
 (copy the Ocean block), then add an entry to `THEMES` in `js/app.js`.
 
 **Replace the logo.** Overwrite the three files in `img/` with your own, keeping the names. The nav
-swaps them automatically: `logo-light.png` for the Light theme, `logo-dark.png` for Dark and
-`logo-ocean.png` for Ocean. Transparent PNGs about 150 px tall work well. To change which logo a
+swaps them automatically: `logo-light.svg` for the Light theme, `logo-dark.svg` for Dark and
+`logo-ocean.svg` for Ocean. SVG stays sharp at any size; a transparent PNG also works if you change
+the file extension in `THEMES` (`js/app.js`). To change which logo a
 theme uses, edit the `logo` field of that theme in `THEMES` (`js/app.js`).
 
 **Change the Beyond Sigma buttons.** The "BS - Syllabus" and "BS - Roadmap" buttons are in the nav
@@ -57,9 +59,13 @@ arrow is shown instead.
 **Nav on phones.** Below 900 px wide the page links and buttons fold into the menu button. The
 breakpoint is in the "Responsive rules" section of `css/styles.css`.
 
-**After you edit a file, bump the version.** `index.html` loads the files as `styles.css?v=5`,
-`data.js?v=5` and `app.js?v=5`. Change the number (for example to `?v=6`) when you publish a change,
+**After you edit a file, bump the version.** `index.html` loads the files as `styles.css?v=6`,
+`data.js?v=6` and `app.js?v=6`. Change the number (for example to `?v=7`) when you publish a change,
 so visitors' browsers fetch the new file instead of an old cached copy.
+
+**Replace the favicon.** Overwrite `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png` and
+`apple-touch-icon.png` (next to `index.html`) with your own, keeping the names. Browsers cache
+favicons for a long time, so hard-refresh or open the site in a private window to see a change.
 
 ## Your progress
 

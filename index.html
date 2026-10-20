@@ -9,13 +9,11 @@
       content="A self-paced computer science degree roadmap: 36 subjects, study order, tools, projects and free resources."
     />
     <meta name="theme-color" content="#111827" />
-
-    <!-- Favicon: a small tree (trunk, two branches, three status-coloured nodes), embedded as SVG. -->
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111827'/%3E%3Cpath d='M32 50V30M32 30L18 15M32 30L46 15' stroke='%23e5e7eb' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='18' cy='14' r='7' fill='%23ff7a59'/%3E%3Ccircle cx='46' cy='14' r='7' fill='%236ea8ff'/%3E%3Ccircle cx='32' cy='51' r='7' fill='%234ade80'/%3E%3C/svg%3E"
-    />
+    <!-- Favicon pack: the files sit next to this page. -->
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 
     <!-- Fonts (optional: the site falls back to system fonts if these cannot load). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +22,7 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
     />
 
-    <link rel="stylesheet" href="css/styles.css?v=5" />
+    <link rel="stylesheet" href="css/styles.css?v=6" />
   </head>
 
   <body id="top">
@@ -33,15 +31,15 @@
          Phones: only the logo and a menu button show; the links and buttons fold into the menu. -->
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <div class="site-nav__bar">
-        <a class="brand" href="#top" aria-label="Tech Skillo logo, back to top">
+        <a class="brand" href="#top" aria-label="Computer Stack logo, back to top">
           <!-- The logo file changes with the theme (see THEMES in js/app.js). -->
           <img
             class="brand__logo"
             id="brand-logo"
-            src="img/logo-light.png"
-            alt="Tech Skillo"
-            width="58"
-            height="46"
+            src="img/logo-light.svg"
+            alt="Computer Stack"
+            width="64"
+            height="52"
           />
         </a>
 
@@ -195,7 +193,7 @@
     <footer>All 36 subjects have resources. Found a dead link? Fix it in js/data.js.</footer>
 
     <!-- Content first, then behaviour. -->
-    <script src="js/data.js?v=5"></script>
-    <script src="js/app.js?v=5"></script>
+    <script src="js/data.js?v=6"></script>
+    <script src="js/app.js?v=6"></script>
   </body>
 </html>

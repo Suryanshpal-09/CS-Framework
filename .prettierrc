@@ -1,0 +1,4 @@
+{
+  "printWidth": 100,
+  "overrides": [{ "files": "js/data.js", "options": { "printWidth": 120 } }]
+}
