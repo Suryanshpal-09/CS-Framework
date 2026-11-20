@@ -503,6 +503,18 @@ header > p {
   height: 20px;
 }
 
+/* The NYC link shows NYC's own wide logo instead of a square favicon. */
+.source-link__icon--logo {
+  width: auto;
+  background: transparent;
+  border-radius: 0;
+}
+
+.source-link__icon--logo img {
+  width: auto;
+  height: 24px;
+}
+
 /* If a logo cannot load (offline, blocked), app.js adds .is-broken and a plain arrow shows. */
 .source-link.is-broken img {
   display: none;
